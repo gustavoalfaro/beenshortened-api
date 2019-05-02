@@ -5,7 +5,12 @@ class LinkShortenerController < ApplicationController
 		full_path = request.env['ORIGINAL_FULLPATH']
 	
 		if full_path[/http:\/\/|https:\/\//]
-			render json: { 'shortURL': 'Here' }, status: 200
+			last_link_id = ShortLink.last.id
+			next_short_link_slug = Base62.encode(last_link_id + 1)
+			next_redirect_link = full_path.last(-1)
+			ShortLink.create(slug: next_short_link_slug, redirect_link: next_redirect_link)
+
+			render json: { 'shortURL': "#{request.domain}/#{next_short_link_slug}" }, status: 200
 		else
 			slug = params[:url]
 			short_link = ShortLink.find_by(slug: slug)
@@ -16,15 +21,10 @@ class LinkShortenerController < ApplicationController
 				redirect_to short_link.redirect_link
 			end
 		end
-		# ShortLink.find_by(slug: )
-		# puts request.env['ORIGINAL_FULLPATH'].last(-1)
-
-
-		#  render json: { 'Your short url': "#{request.domain}/#{Base62.encode(8640)}" }
 	end
 
 	def top
-		top_query = "SELECT * FROM short_links WHERE access_count IS NOT NULL ORDER BY access_count DESC LIMIT 100"
+		top_query = "SELECT * FROM short_links ORDER BY access_count DESC LIMIT 100"
 		short_links = ShortLink.connection.select_all(top_query).to_hash
 		render json: { 'top100': short_links }
 	end
