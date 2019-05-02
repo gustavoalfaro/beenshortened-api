@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  slug: MyString
+  redirect_link: MyText
+  access_count: 1
+  page_title: MyText
+
+two:
+  slug: MyString
+  redirect_link: MyText
+  access_count: 1
+  page_title: MyText
