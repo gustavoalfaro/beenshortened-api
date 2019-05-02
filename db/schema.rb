@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_02_033454) do
+ActiveRecord::Schema.define(version: 2019_05_02_084557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2019_05_02_033454) do
   create_table "short_links", force: :cascade do |t|
     t.string "slug"
     t.text "redirect_link"
-    t.integer "access_count"
+    t.integer "access_count", default: 0
     t.text "page_title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
