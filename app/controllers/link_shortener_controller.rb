@@ -1,7 +1,11 @@
-class LinkShortenerController < ApplicationController
-  def index
-    puts request.env['ORIGINAL_FULLPATH'].last(-1)
+require 'base62-rb'
 
-    render json: { 'Your short url': "#{request.domain}/slug" }
-  end
+class LinkShortenerController < ApplicationController
+	def index
+
+	end
+
+	def top
+		
+	end
 end
