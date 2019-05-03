@@ -12,6 +12,8 @@ gem 'rspec'
 gem 'rspec-rails'
 # Use for enconding and decoding the slug
 gem 'base62-rb'
+# Use to get title from pages
+gem 'pismo'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder

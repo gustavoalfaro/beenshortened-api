@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
-  get 'top.json' => 'link_shortener#top'
-  get '/*url' => 'link_shortener#index'
+  namespace :api do
+    namespace :v1 do
+      resources :link_shortener, only: [:show, :create] do
+        get :top, on: :collection
+      end
+    end
+  end
 end
