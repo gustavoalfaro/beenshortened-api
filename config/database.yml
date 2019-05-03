@@ -80,6 +80,7 @@ test:
 #
 production:
   <<: *default
-  database: beenshortened-api_production
-  username: beenshortened-api
-  password: <%= ENV['BEENSHORTENED-API_DATABASE_PASSWORD'] %>
+  host: <%= ENV['DB_HOST'] %>
+  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>

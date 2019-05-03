@@ -12,9 +12,13 @@ class GetPageTitlesJob < ApplicationJob
     short_links = ShortLink.where(page_title: nil)
 
     short_links.each do | short_link |
-      document = Pismo::Document.new(short_link.redirect_link)
-      short_link.page_title = document.title
-      short_link.save
+      begin
+        document = Pismo::Document.new(short_link.redirect_link)
+        short_link.page_title = document.title
+        short_link.save
+      rescue
+        puts "Couldn't retreive page title"
+      end
     end
   end
 end
