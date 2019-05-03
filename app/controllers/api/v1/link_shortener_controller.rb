@@ -14,7 +14,7 @@ module Api
           last_link_id = last_shortened_link ? last_shortened_link.id : 0
           next_short_link_slug = Base62.encode(last_link_id + 1)
           ShortLink.create(slug: next_short_link_slug, redirect_link: redirect_link)
-          shortened_full_url = "#{request.protocol}#{request.host_with_port}/#{next_short_link_slug}"
+          shortened_full_url = "#{request.protocol}#{request.host_with_port}/api/v1/link_shortener/#{next_short_link_slug}"
 
           render json: { 'shortURL': shortened_full_url  }, status: :ok
         else
