@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateShortLinks < ActiveRecord::Migration[5.2]
   def change
     create_table :short_links do |t|

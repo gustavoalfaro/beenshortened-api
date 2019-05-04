@@ -1,0 +1,11 @@
+AllCops:
+  Exclude:
+    - 'bin/*'
+    - 'db/**/*'
+Metrics/LineLength:
+  Max: 120
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*_spec.rb # Specs have to have many test in a block
+Metrics/MethodLength:
+  Max: 12

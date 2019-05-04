@@ -1,24 +1,25 @@
-require 'base62-rb'
+# frozen_string_literal: true
 
 module Api
   module V1
+    # Creates optimal short links and shows the most used
     class LinkShortenerController < ApplicationController
-      GetPageTitlesJob.set(wait: 10.minutes).perform_later
+      include LinkShortenerHelper
+      GetPageTitlesJob.set(wait: 10.seconds).perform_later
 
       def create
         redirect_link = params[:url]
         url_parsed = URI.parse(redirect_link)
 
         if url_parsed.host.present?
-          last_shortened_link = ShortLink.last
-          last_link_id = last_shortened_link ? last_shortened_link.id : 0
-          next_short_link_slug = Base62.encode(last_link_id + 1)
-          ShortLink.create(slug: next_short_link_slug, redirect_link: redirect_link)
-          shortened_full_url = "#{request.protocol}#{request.host_with_port}/api/v1/link_shortener/#{next_short_link_slug}"
+          link_shortened = short_link_creation
+          ShortLink.create(slug: link_shortened, redirect_link: redirect_link)
+          host_url = "#{request.protocol}#{request.host_with_port}/api/v1/link_shortener/"
+          full_shortened_link = "#{host_url}#{link_shortened}"
 
-          render json: { 'shortURL': shortened_full_url  }, status: :ok
+          render json: { 'shortURL': full_shortened_link }, status: :ok
         else
-          render json: { 'error': 'Invalid url provided'  }, status: :bad_request
+          render json: { 'error': 'Invalid url provided' }, status: :bad_request
         end
       end
 
@@ -26,7 +27,7 @@ module Api
         slug = params[:id]
         short_link = ShortLink.find_by(slug: slug)
 
-        if short_link.nil?
+        if short_link.blank?
           render json: { 'error': 'Could not found that URL' }, status: :not_found
         else
           short_link.access_count = short_link.access_count + 1
@@ -37,9 +38,8 @@ module Api
       end
 
       def top
-        query_attributes = 'id, slug, redirect_link, page_title'
-        top_visited_links = ShortLink.select(query_attributes).order(access_count: :desc).limit(100).as_json
-        has_shortened_links = top_visited_links.length != 0
+        top_visited_links = ShortLink.top(100).as_json
+        has_shortened_links = top_visited_links.any?
         result = has_shortened_links ? top_visited_links : 'No shortened URLs found'
 
         if has_shortened_links
