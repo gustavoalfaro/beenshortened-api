@@ -5,7 +5,7 @@ module Api
     # Creates optimal short links and shows the most used
     class LinkShortenerController < ApplicationController
       include LinkShortenerHelper
-      GetPageTitlesJob.set(wait: 10.seconds).perform_later
+      GetPageTitlesJob.set(wait: 10.minutes).perform_later
 
       def create
         redirect_link = params[:url]
