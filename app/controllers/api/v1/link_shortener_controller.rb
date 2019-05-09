@@ -14,10 +14,8 @@ module Api
         if url_parsed.host.present?
           link_shortened = short_link_creation
           ShortLink.create(slug: link_shortened, redirect_link: redirect_link)
-          host_url = "#{request.protocol}#{request.host_with_port}/api/v1/link_shortener/"
-          full_shortened_link = "#{host_url}#{link_shortened}"
 
-          render json: { 'shortURL': full_shortened_link }, status: :ok
+          render json: { 'shortLink': link_shortened }, status: :ok
         else
           render json: { 'error': 'Invalid url provided' }, status: :bad_request
         end
@@ -33,7 +31,7 @@ module Api
           short_link.access_count = short_link.access_count + 1
           short_link.save
 
-          render json: { 'redirect_link': short_link.redirect_link }, status: :ok
+          render json: { 'redirectLink': short_link.redirect_link }, status: :ok
         end
       end
 
